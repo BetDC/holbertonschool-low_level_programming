@@ -1,0 +1,36 @@
+CC = gcc
+SRC = main.c holberton.c
+OBJ = $(SRC:.c=.o)
+NAME = school
+CFLAGS = -Wall -Werror -Wextra -pedantic
+RM = rm -f
+
+.PHONY: all clean oclean fclean re
+
+all: m.h $(OBJ)
+	@$(CC) $(OBJ) -o $(NAME)
+
+clean:
+	@$(RM) *~ $(NAME)
+
+oclean:
+	@$(RM) $(OBJ)
+
+fclean: clean oclean
+
+re: oclean all
+
+ifeq ($(origin RM), undefined)
+	RM_CHECK = 1
+endif
+
+ifeq ($(words $(filter $(RM), $(shell grep -o $(RM) $(MAKEFILE_LIST)))), 1)
+	ifndef RM_CHECK
+		RM_CHECK = 2
+	else
+		$(error Variable RM is not defined but used (maximum 2 times). Also checks that $(RM) is only used one time in the Makefile)
+	endif
+else ifneq ($(words $(filter $(RM), $(shell grep -o $(RM) $(MAKEFILE_LIST)))), 0)
+	$(error Variable RM is not defined but used (maximum 2 times). Also checks that $(RM) is only used one time in the Makefile)
+endif
+
